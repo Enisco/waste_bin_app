@@ -7,8 +7,10 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class SmartWasteBinController extends GetxController {
-  var receivedMessage = '40';
-  int percentageVal = 40;
+  var receivedMessage = '0';
+  int percentageVal = 0;
+  bool locked = false;
+  bool open = false;
 
   /// MQTT EMQX Credentials
   final client =
@@ -17,6 +19,8 @@ class SmartWasteBinController extends GetxController {
   final builder = MqttClientPayloadBuilder();
   String pubTopic = 'wastebinapp/apptobin';
   String subTopic = 'wastebinapp/bintoapp';
+  // String pubTopic = 'duke/wastebinapp/apptobin';
+  // String subTopic = 'duke/wastebinapp/bintoapp';
 
   /// Functions
   Future<void> mqttConnect() async {
@@ -63,6 +67,7 @@ class SmartWasteBinController extends GetxController {
     /// Ok, lets try a subscription
     print('Subscribing to $subTopic topic');
     client.subscribe(subTopic, MqttQos.atMostOnce);
+    String valCheck = "!";
 
     client.updates?.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
           final recMess = c![0].payload as MqttPublishMessage;
@@ -71,14 +76,28 @@ class SmartWasteBinController extends GetxController {
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
           print(
-              'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is => $receivedMessage.');
+              'Topic is <${c[0].topic}>, payload is => $receivedMessage => $valCheck');
 
-          percentageVal = int.parse(receivedMessage);
-
-          if (percentageVal < 35) {
-            //
+          if (receivedMessage.contains('l')) {
+            locked = true;
+            print("lock state is now: $locked");
+          } else if (receivedMessage.contains('u')) {
+            locked = false;
+            print("lock state is now: $locked");
+            // } else if (receivedMessage == 'c') {
+            //   open = false;
+            // }  else if (receivedMessage == 'o') {
+            //   open = true;
           } else {
-            print('$percentageVal is greater than threshold');
+            try {
+              percentageVal = int.parse(receivedMessage);
+            } catch (e) {
+              print("Error! Could not parse invalid command");
+            }
+          }
+
+          if (percentageVal > 90) {
+            //
           }
 
           update();
@@ -104,7 +123,7 @@ class SmartWasteBinController extends GetxController {
     builder.addString(msg);
 
     // Publish it
-    print('EXAMPLE::Publishing our topic');
+    print('EXAMPLE::Publishing message: $msg');
     client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload!);
   }
 

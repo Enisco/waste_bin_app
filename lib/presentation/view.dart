@@ -1,7 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:waste_bin_app/presentation/controller.dart';
@@ -46,7 +44,8 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
         init: SmartWasteBinController(),
         builder: (context) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(40),
+            padding: EdgeInsets.symmetric(
+                horizontal: 40, vertical: size.height * 0.03),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -54,7 +53,7 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      height: 400,
+                      height: 350,
                       width: size.width * 0.6,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(
@@ -72,14 +71,14 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
                       children: [
                         const Padding(padding: EdgeInsets.only(top: 90)),
                         SizedBox(
-                          height: 305,
-                          width: 40,
+                          height: 260,
+                          width: 30,
                           child: Column(
                             children: [
                               Expanded(
                                 child: Container(
-                                  width: 50,
-                                  height: 305 *
+                                  width: 30,
+                                  height: 260 *
                                       (100.0 -
                                           controller.percentageVal.toDouble() /
                                               100),
@@ -87,8 +86,8 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
                                 ),
                               ),
                               Container(
-                                width: 50,
-                                height: 305 *
+                                width: 30,
+                                height: 260 *
                                     (controller.percentageVal.toDouble() / 100),
                                 color: Colors.red,
                               ),
@@ -100,7 +99,7 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                SizedBox(height: size.height * 0.04),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
@@ -119,7 +118,7 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
                     Text('Available'),
                   ],
                 ),
-                const SizedBox(height: 50),
+                SizedBox(height: size.height * 0.06),
                 const Text(
                   'Bin fill level:',
                   style: TextStyle(
@@ -127,7 +126,7 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
                       fontWeight: FontWeight.w600,
                       color: Colors.black54),
                 ),
-                const SizedBox(height: 15),
+                SizedBox(height: size.height * 0.02),
                 Text(
                   '${controller.percentageVal.toString()}%',
                   style: const TextStyle(
@@ -135,6 +134,33 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
+                // const SizedBox(height: 25),
+                SizedBox(height: size.height * 0.045),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      print('Custom Button pressed');
+                      controller.mqttPublish(controller.locked ? "2" : "1");
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor:
+                          controller.locked ? Colors.red : Colors.green,
+                      fixedSize: Size(size.width / 2, 50),
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                    ),
+                    child: Text(
+                      controller.locked ? "Unlock" : "Lock",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           );
