@@ -5,8 +5,12 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:waste_bin_app/services/local_notif_services.dart';
 
 class SmartWasteBinController extends GetxController {
+  LocalNotificationServices localNotificationServices =
+      LocalNotificationServices();
+
   var receivedMessage = '0';
   int percentageVal = 0;
   bool locked = false;
@@ -17,10 +21,10 @@ class SmartWasteBinController extends GetxController {
       MqttServerClient.withPort('broker.emqx.io', 'wastebinapp_client1', 1883);
   var pongCount = 0, connStatus = 0;
   final builder = MqttClientPayloadBuilder();
-  String pubTopic = 'wastebinapp/apptobin';
-  String subTopic = 'wastebinapp/bintoapp';
-  // String pubTopic = 'duke/wastebinapp/apptobin';
-  // String subTopic = 'duke/wastebinapp/bintoapp';
+  // String pubTopic = 'wastebinapp/apptobin';
+  // String subTopic = 'wastebinapp/bintoapp';
+  String pubTopic = 'duke/wastebinapp/apptobin';
+  String subTopic = 'duke/wastebinapp/bintoapp';
 
   /// Functions
   Future<void> mqttConnect() async {
@@ -97,6 +101,7 @@ class SmartWasteBinController extends GetxController {
           }
 
           if (percentageVal > 90) {
+            localNotificationServices.showNotification(percentageVal);
             //
           }
 

@@ -13,7 +13,7 @@ class SmartWasteBinApp extends StatelessWidget {
       title: 'Smart Waste Bin',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.blue,
       ),
       home: const SmartWasteBinView(),
     );

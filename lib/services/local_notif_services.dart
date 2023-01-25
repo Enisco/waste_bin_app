@@ -41,8 +41,8 @@ class LocalNotificationServices {
   showNotification(int val) async {
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
-    await flutterLocalNotificationsPlugin.show(
-        0, 'Warning!', 'Soil Moisture is low: $val', notificationDetails,
+    await flutterLocalNotificationsPlugin.show(0, 'Warning: Bin Locked!',
+        'Bin is now locked because it is $val% full. ', notificationDetails,
         payload: '');
   }
 }

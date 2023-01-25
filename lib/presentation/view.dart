@@ -30,6 +30,7 @@ class _SSmartWasteBinViewState extends State<SmartWasteBinView> {
 
     return Scaffold(
       appBar: AppBar(
+        // backgroundColor: Colors.black54,
         centerTitle: true,
         title: const Text(
           'Smart Waste Bin',
